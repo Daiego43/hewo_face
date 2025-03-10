@@ -1,0 +1,54 @@
+face:
+  bg_color:
+    - 100
+    - 139
+    - 127
+  size: 300
+  position:
+    - 200
+    - 100
+  max_size:
+    - 940
+    - 640
+  emotion:
+    left_eye:
+      top_lash:
+        emotion:
+          - 0
+          - 0
+          - 0
+      pupil:
+        emotion: 0
+      bottom_lash:
+        emotion:
+          - 0
+          - 0
+          - 0
+    right_eye:
+      top_lash:
+        emotion:
+          - 0
+          - 0
+          - 0
+      pupil:
+        emotion: 0
+      bottom_lash:
+        emotion:
+          - 0
+          - 0
+          - 0
+    mouth:
+      upper_lip:
+          emotion:
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+      lower_lip:
+          emotion:
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
