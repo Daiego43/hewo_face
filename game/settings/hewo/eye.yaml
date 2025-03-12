@@ -19,7 +19,7 @@ eye:
       - 210
       - 146
     emotion:
-      - 0
+      - 75
   bot_lash:
     flip: true
     color:

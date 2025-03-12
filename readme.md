@@ -10,7 +10,7 @@ in the window.
 ## Installation
 To install and run the package, you can use pip:
 ```bash
-pip install hewo_pygame
+pip install .
 ```
 Then you can run the package using the following command:
 ```bash

@@ -4,6 +4,7 @@ import numpy as np
 from scipy.interpolate import make_interp_spline
 from game.settings import create_logger
 
+
 class EyeLash:
     def __init__(self, size, position, settings, object_name="EyeLash"):
         self.logger = create_logger(object_name)
@@ -94,7 +95,7 @@ class Pupil:
         self.set_size(size)
         self.set_position(position)
         self.color = settings['color']
-        self.emotion = settings['emotion']
+        self.emotion = settings['emotion'][0]
 
     def update(self):
         pass
@@ -108,6 +109,18 @@ class Pupil:
     def handle_event(self, event):
         pass
 
-    def draw(self, surface):
-        pygame.draw.ellipse(surface, self.color, (0, 0, self.size[0], self.size[1]))
+    def set_emotion(self, emotion):
+        self.emotion = max(0, min(emotion, 100))
+        self.logger.debug(f"emotion set: {self.emotion}")
 
+    def draw(self, surface):
+        # Calcular el tamaño de la elipse basado en la emoción
+        scale = self.emotion / 100  # Proporción entre 0 y 1
+        ellipse_width = self.size[0] * scale
+        ellipse_height = self.size[1] * scale
+
+        # Calcular la posición centrada de la elipse
+        ellipse_x = self.position[0] + (self.size[0] - ellipse_width) / 2
+        ellipse_y = self.position[1] + (self.size[1] - ellipse_height) / 2
+
+        pygame.draw.ellipse(surface, self.color, (ellipse_x, ellipse_y, ellipse_width, ellipse_height))

@@ -37,6 +37,8 @@ class Face:
         self.left_eye = Eye(self.eye_size, self.left_eye_pos, settings=self.left_eye_settings, object_name="Left Eye")
         self.right_eye = Eye(self.eye_size, self.right_eye_pos, settings=self.right_eye_settings, object_name="Right Eye")
 
+        self.set_position(self.position)
+
 
     def update_face(self):
         self.face_surface = pygame.Surface(self.size)
