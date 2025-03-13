@@ -113,6 +113,9 @@ class Pupil:
         self.emotion = max(0, min(emotion, 100))
         self.logger.debug(f"emotion set: {self.emotion}")
 
+    def get_emotion(self):
+        return self.emotion
+
     def draw(self, surface):
         # Calcular el tamaño de la elipse basado en la emoción
         scale = self.emotion / 100  # Proporción entre 0 y 1

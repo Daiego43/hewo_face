@@ -13,8 +13,10 @@ class HeWo(Face):
         # Configuración de estado inicial
         self.initial_emotion = [
             0, 0, 0,
+            100,
             100, 100, 100,
             0, 0, 0,
+            100,
             100, 100, 100,
             0, 0, 100, 0, 0,
             0, 0, 100, 0, 0
@@ -99,12 +101,12 @@ class HeWo(Face):
         position[1] += dy
         self.set_position(position)
         self.logger.info(f"Position adjusted to: {position}")
-    
+
     def adjust_size(self, ds):
         size_factor = self.size_factor
         size_factor += ds
         self.set_size(size_factor)
-        self.adjust_position(0,0)
+        self.adjust_position(0, 0)
 
     def update_emotion(self):
         """ Aplica la transición progresiva hacia el emotion_goal """
@@ -115,8 +117,10 @@ class HeWo(Face):
         """ Convierte una lista de valores en un diccionario de emociones """
         keys = [
             'letl_a', 'letl_b', 'letl_c',
+            'lps',
             'lebl_a', 'lebl_b', 'lebl_c',
             'retl_a', 'retl_b', 'retl_c',
+            'rps',
             'rebl_a', 'rebl_b', 'rebl_c',
             'tl_a', 'tl_b', 'tl_c', 'tl_d', 'tl_e',
             'bl_a', 'bl_b', 'bl_c', 'bl_d', 'bl_e'
@@ -138,13 +142,15 @@ class HeWo(Face):
 
     def get_emotion(self):
         """ Obtiene el estado actual de la emoción desde los componentes de la cara """
-        letl, lebl = self.left_eye.get_emotion()
-        retl, rebl = self.right_eye.get_emotion()
+        letl, lps, lebl = self.left_eye.get_emotion()
+        retl, rps, rebl = self.right_eye.get_emotion()
         tl, bl = self.mouth.get_emotion()
         return {
             'letl_a': letl[0], 'letl_b': letl[1], 'letl_c': letl[2],
+            'lps': lps,
             'lebl_a': lebl[0], 'lebl_b': lebl[1], 'lebl_c': lebl[2],
             'retl_a': retl[0], 'retl_b': retl[1], 'retl_c': retl[2],
+            'rps': rps,
             'rebl_a': rebl[0], 'rebl_b': rebl[1], 'rebl_c': rebl[2],
             'tl_a': tl[0], 'tl_b': tl[1], 'tl_c': tl[2], 'tl_d': tl[3], 'tl_e': tl[4],
             'bl_a': bl[0], 'bl_b': bl[1], 'bl_c': bl[2], 'bl_d': bl[3], 'bl_e': bl[4]
@@ -153,13 +159,17 @@ class HeWo(Face):
     def set_emotion(self, emotion_dict):
         """ Configura los valores de emoción para los componentes de la cara """
         letl = [emotion_dict['letl_a'], emotion_dict['letl_b'], emotion_dict['letl_c']]
+        lps = emotion_dict['lps']
         lebl = [emotion_dict['lebl_a'], emotion_dict['lebl_b'], emotion_dict['lebl_c']]
         retl = [emotion_dict['retl_a'], emotion_dict['retl_b'], emotion_dict['retl_c']]
+        rps = emotion_dict['rps']
         rebl = [emotion_dict['rebl_a'], emotion_dict['rebl_b'], emotion_dict['rebl_c']]
-        tl = [emotion_dict['tl_a'], emotion_dict['tl_b'], emotion_dict['tl_c'], emotion_dict['tl_d'], emotion_dict['tl_e']]
-        bl = [emotion_dict['bl_a'], emotion_dict['bl_b'], emotion_dict['bl_c'], emotion_dict['bl_d'], emotion_dict['bl_e']]
-        self.left_eye.set_emotion(letl, lebl)
-        self.right_eye.set_emotion(retl, rebl)
+        tl = [emotion_dict['tl_a'], emotion_dict['tl_b'], emotion_dict['tl_c'], emotion_dict['tl_d'],
+              emotion_dict['tl_e']]
+        bl = [emotion_dict['bl_a'], emotion_dict['bl_b'], emotion_dict['bl_c'], emotion_dict['bl_d'],
+              emotion_dict['bl_e']]
+        self.left_eye.set_emotion(letl, lps, lebl)
+        self.right_eye.set_emotion(retl, rps, rebl)
         self.mouth.set_emotion(tl, bl)
         self.logger.debug(f"Setting emotion to: {emotion_dict}")
 
@@ -172,8 +182,6 @@ class HeWo(Face):
     def reset_emotion(self):
         self.set_size(300)
         self.emotion_goal = self.emotion_dict_from_values(self.initial_emotion)
-
-    
 
 
 # Código de prueba
