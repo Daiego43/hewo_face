@@ -39,13 +39,16 @@ class Face:
 
         self.set_position(self.position)
 
+        # Blink timer
+        self.blink_timer = 0
+        self.blink_interval = 120  # Blink rate
 
-    def update_face(self):
+    def update_layout(self):
         self.face_surface = pygame.Surface(self.size)
         self.eye_size = [self.size[0] / 5, self.size[1] / 5 * 4]
         self.mouth_size = [self.size[0] / 5 * 3, self.size[1] / 5]
 
-        self.left_eye_pos = [0, 0]  # Posición en la superficie
+        self.left_eye_pos = [0, 0]
         self.right_eye_pos = [self.eye_size[0] * 4, 0]
         self.mouth_pos = [self.eye_size[0], self.eye_size[1]]
 
@@ -56,15 +59,15 @@ class Face:
         self.right_eye.size = self.eye_size
         self.mouth.size = self.mouth_size
 
+    def update_elements(self):
         self.left_eye.update()
         self.right_eye.update()
         self.mouth.update()
 
-
     def set_size(self, size_factor):
         self.size_factor = size_factor
-        size = [PHI* self.size_factor, size_factor]
-        self.size = [max(1,size[0]), max(1,size[1])]
+        size = [PHI * self.size_factor, size_factor]
+        self.size = [max(1, size[0]), max(1, size[1])]
         self.eye_size = [self.size[0] / 5, self.size[1] / 5 * 4]
         self.mouth_size = [self.size[0] / 5 * 3, self.size[1] / 5]
         self.left_eye.set_size(self.eye_size)
@@ -74,12 +77,21 @@ class Face:
     def set_position(self, pos):
         self.position[0] = max(0, min(pos[0], self.max_size[0] - self.size[0]))
         self.position[1] = max(0, min(pos[1], self.max_size[1] - self.size[1]))
-        self.left_eye.set_position([0, 0] ) # Posición en la superficie
+        self.left_eye.set_position([0, 0])
         self.right_eye.set_position([self.eye_size[0] / 100 - 1, 0])
         self.mouth.position = [self.eye_size[0], self.eye_size[1]]
 
-    def update(self):
-        self.update_face()
+    def update_face(self):
+        self.blink_timer += 1
+        if self.blink_timer >= self.blink_interval:
+            self.left_eye.trigger_blink()
+            self.right_eye.trigger_blink()
+            self.blink_timer = 0
+
+        self.update_layout()
+        self.left_eye.animate_blink()
+        self.right_eye.animate_blink()
+        self.update_elements()
 
     def handle_event(self, event):
         self.left_eye.handle_event(event)
@@ -93,7 +105,6 @@ class Face:
         self.right_eye.draw(self.face_surface)
         self.mouth.draw(self.face_surface)
         surface.blit(self.face_surface, dest=self.position)
-
 
 
 # Test face object

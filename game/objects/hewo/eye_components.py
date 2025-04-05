@@ -46,7 +46,9 @@ class EyeLash:
         indices = [1, 2, 3]
         if self.flip:
             indices = [0, 5, 4]
-        for i, tup in enumerate(zip(indices, self.emotion)):
+        # invertir la emoción solo si flip está activo: 0 = abierto, 100 = cerrado
+        values = [100 - e if self.flip else e for e in self.emotion]
+        for i, tup in enumerate(zip(indices, values)):
             self.polygon_points[tup[0]][1] = self.position[1] + self.size[1] * (tup[1] / 100)
 
     def create_polygon(self):

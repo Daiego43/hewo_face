@@ -4,7 +4,6 @@ from game.objects.hewo.eye_components import EyeLash, Pupil
 from game.settings import create_logger
 
 class Eye:
-    # Here I should initialize all the elements that make up the eye
     def __init__(self, size, position, settings, object_name="Eye"):
         self.logger = create_logger(object_name)
         self.settings = copy.deepcopy(settings)
@@ -12,12 +11,10 @@ class Eye:
         self.position = position
         self.BG_COLOR = self.settings['bg_color']
 
-        # Sizes are in proportion to the eye size
         self.lash_size = [self.size[0], self.size[1] / 2]
         self.t_pos = [0, 0]
         self.b_pos = [0, self.size[1] / 2]
 
-        # Declare the elements that make up the eye
         self.top_lash = EyeLash(
             size=self.lash_size,
             position=self.t_pos,
@@ -37,8 +34,11 @@ class Eye:
             object_name=f"{object_name} - Bottom Lash"
         )
 
-        # And initialize the surface of it
         self.eye_surface = pygame.Surface(self.size)
+        self.blinking = False
+        self.blink_phase = 0
+        self.original_top = self.top_lash.get_emotion()
+        self.original_bot = self.bot_lash.get_emotion()
 
     def handle_event(self, event):
         self.top_lash.handle_event(event)
@@ -57,6 +57,39 @@ class Eye:
         self.top_lash.update()
         self.pupil.update()
         self.bot_lash.update()
+
+    def trigger_blink(self):
+        if not self.blinking:
+            self.blinking = True
+            self.blink_phase = 0
+            self.original_top = self.top_lash.get_emotion()
+            self.original_bot = self.bot_lash.get_emotion()
+
+    def animate_blink(self, closing_frames=23, opening_frames=2):
+        total_phases = closing_frames + opening_frames
+
+        if self.blinking:
+            phase = self.blink_phase
+
+            if phase < closing_frames:
+                # Fase de cierre: interpolación rápida hacia 100
+                t = phase / closing_frames
+                interp_top = [int((1 - t) * o + t * 100) for o in self.original_top]
+                interp_bot = [int((1 - t) * o + t * 100) for o in self.original_bot]
+            else:
+                # Fase de apertura: interpolación lenta de vuelta al original
+                t = (phase - closing_frames) / opening_frames
+                interp_top = [int((1 - t) * 100 + t * o) for o in self.original_top]
+                interp_bot = [int((1 - t) * 100 + t * o) for o in self.original_bot]
+
+            self.top_lash.set_emotion(interp_top)
+            self.bot_lash.set_emotion(interp_bot)
+
+            self.blink_phase += 1
+            if self.blink_phase >= total_phases:
+                self.blinking = False
+                self.top_lash.set_emotion(self.original_top)
+                self.bot_lash.set_emotion(self.original_bot)
 
     def set_emotion(self, t_emotion, p_emotion, b_emotion):
         self.logger.debug(f"emotion set: {t_emotion}, {b_emotion}")

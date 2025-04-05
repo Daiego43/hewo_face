@@ -4,8 +4,8 @@ class EmotionMapper:
     def __init__(self, emotion_step=5):
         self.emotion_step = emotion_step
         self.initial_emotion = [
-            0, 0, 0, 100, 100, 100, 100,
-            0, 0, 0, 100, 100, 100, 100,
+            0, 0, 0, 100, 0, 0, 0,
+            0, 0, 0, 100, 0, 0, 0,
             0, 0, 100, 0, 0, 0, 0, 100, 0, 0
         ]
         self.emotion_goal = self.emotion_dict_from_values(self.initial_emotion)
