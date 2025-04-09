@@ -15,6 +15,11 @@ class HeWo(Face):
         self.mapper = EmotionMapper()
         self.input_handler = HeWoInputHandler(self, self.mapper)
 
+    def set_emotion_goal(self, emotion_goal):
+        self.logger.debug(f"Setting emotion goal: {emotion_goal}")
+        self.mapper.emotion_goal = emotion_goal
+        self.update_face()
+
     def update(self):
         if self.input_handler.manual_mode:
             self.input_handler.handle_keypressed()

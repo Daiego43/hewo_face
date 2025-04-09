@@ -1,5 +1,6 @@
 import pygame
 import copy
+import random
 from game.objects.hewo.eye import Eye
 from game.objects.hewo.mouth import Mouth
 from game.settings import SettingsLoader, create_logger
@@ -41,7 +42,11 @@ class Face:
 
         # Blink timer
         self.blink_timer = 0
-        self.blink_interval = 120  # Blink rate
+        self.blink_interval = random.randint(300, 700)
+        self.is_talking = True
+        self.mouth.talking_amplitude = 80
+        self.mouth.talking_speed = 15
+
 
     def update_layout(self):
         self.face_surface = pygame.Surface(self.size)
@@ -87,6 +92,7 @@ class Face:
             self.left_eye.trigger_blink()
             self.right_eye.trigger_blink()
             self.blink_timer = 0
+            self.blink_interval = random.randint(300, 700)  # Randomize blink interval
 
         self.update_layout()
         self.left_eye.animate_blink()

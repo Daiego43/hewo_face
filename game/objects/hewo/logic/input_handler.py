@@ -9,7 +9,9 @@ class HeWoInputHandler:
         self.manual_mode = True
 
         self.key_down_mappings = {
-            pygame.K_SPACE: self.toggle_mode
+            pygame.K_SPACE: self.toggle_mode,
+            pygame.K_1: self.toggle_talk,
+            pygame.K_2: self.trigger_blink
         }
 
         self.key_pressed_mappings = {
@@ -72,3 +74,15 @@ class HeWoInputHandler:
         size_factor += ds
         self.hewo.set_size(size_factor)
         self.adjust_position(0, 0)
+
+    def toggle_talk(self):
+        self.hewo.mouth.toggle_talk()
+        if self.hewo.mouth.is_talking:
+            self.hewo.logger.info("Talking mode activated.")
+        else:
+            self.hewo.logger.info("Talking mode deactivated.")
+
+    def trigger_blink(self):
+        self.hewo.left_eye.trigger_blink()
+        self.hewo.right_eye.trigger_blink()
+        self.hewo.logger.info("Blink triggered.")

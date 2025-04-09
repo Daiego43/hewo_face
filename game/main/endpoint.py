@@ -13,7 +13,7 @@ class ServerEndPoint:
 
     def get_layout(self):
         if self.main_window.active_layout is not None:
-            return self.main_window.layout_list[self.main_window.active_layout]
+            return self.main_window.layout_dict[self.main_window.active_layout]
         return None
 
     def setup_routes(self):
