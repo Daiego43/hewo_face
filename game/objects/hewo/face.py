@@ -44,8 +44,6 @@ class Face:
         self.blink_timer = 0
         self.blink_interval = random.randint(300, 700)
         self.is_talking = True
-        self.mouth.talking_amplitude = 80
-        self.mouth.talking_speed = 15
 
 
     def update_layout(self):

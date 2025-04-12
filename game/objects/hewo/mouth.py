@@ -81,8 +81,8 @@ class Mouth:
         self.bot_lip = Lip(self.size, self.position, self.settings['lower_lip'], object_name=f"{object_name} - Bot Lip")
 
         # Talking vars
-        self.talking_amplitude = 80
-        self.talking_speed = 50
+        self.talking_amplitude = self.settings['talking_amplitude']
+        self.talking_speed = self.settings['talking_speed']
         self._talking_reference = {
             'top': self.top_lip.get_emotion(),
             'bot': self.bot_lip.get_emotion()
