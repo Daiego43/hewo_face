@@ -131,7 +131,6 @@ class Mouth:
             return
 
         tick = (time.time() - self.talking_start_time) * self.talking_speed
-        print(tick, self.talking_speed)
         osc = abs(math.sin(tick)) * self.talking_amplitude
 
         base_top = self._talking_reference['top']
