@@ -10,11 +10,11 @@ in the window.
 ## Installation
 To install and run the package, you can use pip:
 ```bash
-pip install .
+pip install hewo
 ```
 Then you can run the package using the following command:
 ```bash
-hewo_game
+hewo_main
 ```
 
 ## Control Interface
