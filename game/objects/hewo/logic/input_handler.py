@@ -53,21 +53,21 @@ class HeWoInputHandler:
     def toggle_mode(self):
         self.increase_mode = not self.increase_mode
         mode = "Increase" if self.increase_mode else "Decrease"
-        self.hewo.logger.info(f"Mode toggled to: {mode}")
+        self.hewo.logger.debug(f"Mode toggled to: {mode}")
 
     def adjust_emotion(self, param):
         if self.increase_mode:
             self.mapper.emotion_goal[param] = min(100, self.mapper.emotion_goal[param] + self.mapper.emotion_step)
         else:
             self.mapper.emotion_goal[param] = max(0, self.mapper.emotion_goal[param] - self.mapper.emotion_step)
-        self.hewo.logger.info(f"Adjusted {param} to {self.mapper.emotion_goal[param]}")
+        self.hewo.logger.debug(f"Adjusted {param} to {self.mapper.emotion_goal[param]}")
 
     def adjust_position(self, dx, dy):
         position = self.hewo.position
         position[0] += dx
         position[1] += dy
         self.hewo.set_position(position)
-        self.hewo.logger.info(f"Position adjusted to: {position}")
+        self.hewo.logger.debug(f"Position adjusted to: {position}")
 
     def adjust_size(self, ds):
         size_factor = self.hewo.size_factor
@@ -78,11 +78,11 @@ class HeWoInputHandler:
     def toggle_talk(self):
         self.hewo.mouth.toggle_talk()
         if self.hewo.mouth.is_talking:
-            self.hewo.logger.info("Talking mode activated.")
+            self.hewo.logger.debug("Talking mode activated.")
         else:
-            self.hewo.logger.info("Talking mode deactivated.")
+            self.hewo.logger.debug("Talking mode deactivated.")
 
     def trigger_blink(self):
         self.hewo.left_eye.trigger_blink()
         self.hewo.right_eye.trigger_blink()
-        self.hewo.logger.info("Blink triggered.")
+        self.hewo.logger.debug("Blink triggered.")

@@ -92,7 +92,6 @@ class Eye:
                 self.bot_lash.set_emotion(self.original_bot)
 
     def set_emotion(self, t_emotion, p_emotion, b_emotion):
-        self.logger.debug(f"emotion set: {t_emotion}, {b_emotion}")
         self.top_lash.set_emotion(t_emotion)
         self.bot_lash.set_emotion(b_emotion)
         self.pupil.set_emotion(p_emotion)
@@ -101,7 +100,6 @@ class Eye:
         top_emotion = self.top_lash.get_emotion()
         bot_emotion = self.bot_lash.get_emotion()
         pupil_emotion = self.pupil.get_emotion()
-        self.logger.debug(f"current emotion: {top_emotion}, {bot_emotion}")
         return top_emotion, pupil_emotion, bot_emotion
 
     def set_size(self, size):

@@ -75,20 +75,16 @@ class EyeLash:
     def set_size(self, size):
         self.size = size
         self.max_emotion = self.size[1]
-        self.logger.info(f"size set: {self.size}")
 
     def set_position(self, position):
         self.position = position
-        self.logger.info(f"position set: {self.position}")
 
     def get_emotion(self):
-        self.logger.debug(f"current emotion: {self.emotion}")
         return self.emotion
 
     def set_emotion(self, emotion):
         for i, e in enumerate(emotion):
             self.emotion[i] = max(0, min(e, 100))
-        self.logger.debug(f"emotion set: {self.emotion}")
 
 
 class Pupil:
@@ -113,7 +109,6 @@ class Pupil:
 
     def set_emotion(self, emotion):
         self.emotion = max(0, min(emotion, 100))
-        self.logger.debug(f"emotion set: {self.emotion}")
 
     def get_emotion(self):
         return self.emotion

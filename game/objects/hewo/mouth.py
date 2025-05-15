@@ -157,7 +157,6 @@ class Mouth:
         self.top_lip.set_emotion(top_lip_percentages)
         self.bot_lip.set_emotion(bot_lip_percentages)
         self.set_talking_reference()
-        self.logger.debug(f"emotion set: {top_lip_percentages}, {bot_lip_percentages}")
 
     def get_emotion(self):
         """
@@ -165,5 +164,4 @@ class Mouth:
         """
         top_emotion = self.top_lip.get_emotion()
         bot_emotion = self.bot_lip.get_emotion()
-        self.logger.debug(f"current emotion: {top_emotion}, {bot_emotion}")
         return top_emotion, bot_emotion
