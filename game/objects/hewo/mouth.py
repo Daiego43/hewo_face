@@ -1,5 +1,6 @@
 import copy
-
+import math
+import time
 import pygame
 import numpy as np
 from scipy.interpolate import make_interp_spline
@@ -79,6 +80,15 @@ class Mouth:
         self.top_lip = Lip(self.size, self.position, self.settings['upper_lip'], object_name=f"{object_name} - Top Lip")
         self.bot_lip = Lip(self.size, self.position, self.settings['lower_lip'], object_name=f"{object_name} - Bot Lip")
 
+        # Talking vars
+        self.talking_amplitude = self.settings['talking_amplitude']
+        self.talking_speed = self.settings['talking_speed']
+        self._talking_reference = {
+            'top': self.top_lip.get_emotion(),
+            'bot': self.bot_lip.get_emotion()
+        }
+        self.is_talking = False
+
     def set_size(self, size):
         self.size = size
         self.top_lip.size = size
@@ -94,6 +104,48 @@ class Mouth:
     def update(self):
         self.top_lip.update()
         self.bot_lip.update()
+        if self.is_talking:
+            self.animate_talk()
+
+    def set_talking_reference(self):
+        """
+        Establece la referencia de los labios superior e inferior para la animación de hablar.
+        """
+        self._talking_reference = {
+            'top': self.top_lip.get_emotion(),
+            'bot': self.bot_lip.get_emotion()
+        }
+
+    def toggle_talk(self):
+        if not self.is_talking:
+            self.set_talking_reference()
+            self.talking_start_time = time.time()
+            self.is_talking = True
+        else:
+            self.is_talking = False
+            self.top_lip.set_emotion(self._talking_reference['top'])
+            self.bot_lip.set_emotion(self._talking_reference['bot'])
+
+    def animate_talk(self):
+        if not self.is_talking:
+            return
+
+        tick = (time.time() - self.talking_start_time) * self.talking_speed
+        osc = abs(math.sin(tick)) * self.talking_amplitude
+
+        base_top = self._talking_reference['top']
+        base_bot = self._talking_reference['bot']
+
+        center_y = (base_top[2] + base_bot[2]) / 2
+
+        new_top = base_top[:]
+        new_bot = base_bot[:]
+
+        new_top[2] = center_y - osc
+        new_bot[2] = center_y + osc
+
+        self.top_lip.set_emotion(new_top)
+        self.bot_lip.set_emotion(new_bot)
 
     def handle_event(self, event):
         pass
@@ -104,7 +156,7 @@ class Mouth:
         """
         self.top_lip.set_emotion(top_lip_percentages)
         self.bot_lip.set_emotion(bot_lip_percentages)
-        self.logger.debug(f"emotion set: {top_lip_percentages}, {bot_lip_percentages}")
+        self.set_talking_reference()
 
     def get_emotion(self):
         """
@@ -112,5 +164,4 @@ class Mouth:
         """
         top_emotion = self.top_lip.get_emotion()
         bot_emotion = self.bot_lip.get_emotion()
-        self.logger.debug(f"current emotion: {top_emotion}, {bot_emotion}")
         return top_emotion, bot_emotion

@@ -1,2 +1,2 @@
-pip install -e .
-hewo_game
+pip install .
+hewo_main
