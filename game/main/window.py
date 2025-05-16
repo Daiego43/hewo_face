@@ -36,7 +36,7 @@ class MainWindow:
             size=self.window_size,
             display=monitor_id,
             flags=flags,
-            vsync=True
+            vsync=self.settings['vsync']
         )
 
         pygame.display.set_caption(self.settings['window_title'])
@@ -44,7 +44,7 @@ class MainWindow:
         self.clock = pygame.time.Clock()
         self.background_color = self.settings['bg_color']
         self.active_layout = active_layout
-
+        self.fps = self.settings['fps']
         # Inicializa el servidor web sin afectar el flujo
         self.web_server = ServerEndPoint(self)
         self.web_server.start()
@@ -69,7 +69,7 @@ class MainWindow:
             self.active_layout = layout_key
         else:
             self.active_layout = None
-            print(f'Layout key "{layout_key}" not found')
+            self.logger.info(f'Layout key "{layout_key}" not found')
 
     def update(self):
         layout = self.get_active_layout()
@@ -88,7 +88,7 @@ class MainWindow:
             self.handle_events()
             self.update()
             self.draw()
-            self.clock.tick(60)
+            self.clock.tick(self.fps)
 
 
 def main():
