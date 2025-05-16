@@ -33,6 +33,35 @@ class HeWo(Face):
         if self.input_handler.manual_mode:
             self.input_handler.handle_event(event)
 
+    def toggle_talk(self):
+        self.mouth.toggle_talk()
+
+    def trigger_blink(self):
+        self.left_eye.trigger_blink()
+        self.right_eye.trigger_blink()
+
+    def adjust_position(self, dx, dy):
+        pos = self.position
+        pos[0] += dx
+        pos[1] += dy
+        self.set_position(pos)
+
+    def set_face_size(self, new_size):
+        self.set_size(new_size)
+        self.adjust_position(0, 0)
+
+    def set_random_emotion(self):
+        self.mapper.set_random_emotion()
+
+    def reset_emotion(self):
+        self.mapper.reset_emotion()
+
+    def adjust_emotion(self, param, value):
+        """Set emotion parameter `param` to a specific `value` (0-100 clamped)."""
+        clamped_value = max(0, min(100, value))
+        self.mapper.emotion_goal[param] = clamped_value
+        self.logger.debug(f"Set {param} to {clamped_value}")
+
 
 # Código de prueba
 def test_component():
