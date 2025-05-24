@@ -15,9 +15,11 @@ class Face:
 
         # -------------------------------------------------- tamaño / posición
         self.size_factor = self.settings["face"]["size"]
+        self.min_size_factor = self.settings["face"]["min_size"]
+        self.max_size_factor = self.settings["face"]["max_size"]
         self.size = [int(PHI * self.size_factor), int(self.size_factor)]
         self.position = self.settings["face"]["position"]
-        self.max_size = self.settings["face"]["max_size"]
+        self.boundary = self.settings["face"]["boundary"]
 
         # -------------------------------------------------- superficie persistente
         self.color = tuple(self.settings["face"]["bg_color"])
@@ -76,14 +78,15 @@ class Face:
 
     # ------------------------------------------------------------------ setters públicos
     def set_size(self, size_factor):
-        if size_factor != self.size_factor:
+        if self.min_size_factor <= size_factor <= self.max_size_factor:
             self.size_factor = size_factor
             self.size = [int(PHI * size_factor), int(size_factor)]
             self._layout_dirty = True
 
+
     def set_position(self, pos):
-        self.position[0] = max(0, min(pos[0], self.max_size[0] - self.size[0]))
-        self.position[1] = max(0, min(pos[1], self.max_size[1] - self.size[1]))
+        self.position[0] = max(0, min(pos[0], self.boundary[0] - self.size[0]))
+        self.position[1] = max(0, min(pos[1], self.boundary[1] - self.size[1]))
 
     # ------------------------------------------------------------------ núcleo de actualización
     def _core_update(self):

@@ -7,9 +7,11 @@ face:
   position:
     - 200
     - 100
-  max_size:
-    - 940
+  boundary:
+    - 960
     - 640
+  max_size: 600
+  min_size: 100
   emotion:
     left_eye:
       top_lash:
