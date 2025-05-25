@@ -30,7 +30,7 @@ def main():
                           size=(200, 200)),
         MultimediaGameObj(mp4, position=(0, 200), velocity=(0, 0), loop=True, object_name="ImageObj4", size=(200, 200)),
         MultimediaGameObj(mp4, position=(0, 400), velocity=(0, 0), loop=True, object_name="ImageObj5", size=(960, 240)),
-        # MultimediaGameObj(mp4, position=(380, 100), velocity=(0, 0), loop=False, audio='ffplay', object_name="ImageObj",size=(200, 200)),
+        MultimediaGameObj(mp4, position=(380, 100), velocity=(0, 0), loop=False, audio='ffplay', object_name="ImageObj",size=(200, 200)),
     ]
     multimedia_layout = MultimediaLayout(multimedia_objects, bg_color=(0, 0, 0))
 
