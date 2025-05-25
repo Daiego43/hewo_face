@@ -5,7 +5,7 @@ bg_color:
   - 100
   - 139
   - 127
-monitor_id: 1
+monitor_id: 0
 window_title: Hewo-Bot Display
 active_layout: None
 fps: 60
