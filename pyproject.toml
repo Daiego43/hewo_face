@@ -34,7 +34,7 @@ dependencies = [
 ]
 
 [project.scripts]
-hewo_main = "game.main.window:main"
+hewo_main = "game.main.main:main"
 
 [tool.setuptools.packages.find]
 include = ["game", "game.*"]

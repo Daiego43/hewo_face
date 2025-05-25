@@ -1,0 +1,1 @@
+from game.objects.hewo.hewo import HeWo

@@ -1,44 +1,43 @@
-
 import pathlib
 from game.main.window import MainWindow
 from game.settings import SettingsLoader
-from game.objects.hewo.hewo import HeWo
-from game.objects.multimedia.multimedia import MultimediaGameObj, MultimediaLayout
-
+from game.objects.hewo import HeWo
+from game.objects.multimedia import MultimediaGameObj, MultimediaLayout
+import importlib.resources as res
 
 RESOURCES_PATH = pathlib.Path(__file__).parent.parent / "resources"
+
+
 def main():
-    # -------------------------------------------------------- load window config
     window_settings = SettingsLoader().load_settings("game.settings.window")
     hewo_settings = SettingsLoader().load_settings("game.settings.hewo")
-    # -------------------------------------------------------- create main window
-    main_window = MainWindow(
-        settings=window_settings,# change to "media" to boot directly into the multimedia layout
-    )
 
-    # -------------------------------------------------------- build layouts
+    main_window = MainWindow(settings=window_settings)
+
+    # build layouts
     hewo_layout = HeWo(settings=hewo_settings)
 
-    # Minimal multimedia layout example; paths must exist in your project
+    resources_root = res.files("game.resources") if res.is_resource else pathlib.Path("game/resources")
+    mp4 = resources_root / "test.mp4"
+    img = resources_root / "img.png"
+    multimedia_objects: list[MultimediaGameObj] = [
+        # MultimediaGameObj(mp4, audio="ffplay", loop=True),
+        MultimediaGameObj(img, position=(760, 0), velocity=(0, 0), loop=False, audio=False, object_name="ImageObj1",
+                          size=(200, 200)),
+        MultimediaGameObj(img, position=(0, 0), velocity=(0, 0), loop=False, audio=False, object_name="ImageObj2",
+                          size=(200, 200)),
+        MultimediaGameObj(mp4, position=(760, 200), velocity=(0, 0), loop=True, object_name="ImageObj3",
+                          size=(200, 200)),
+        MultimediaGameObj(mp4, position=(0, 200), velocity=(0, 0), loop=True, object_name="ImageObj4", size=(200, 200)),
+        MultimediaGameObj(mp4, position=(0, 400), velocity=(0, 0), loop=True, object_name="ImageObj5", size=(960, 240)),
+        # MultimediaGameObj(mp4, position=(380, 100), velocity=(0, 0), loop=False, audio='ffplay', object_name="ImageObj",size=(200, 200)),
+    ]
+    multimedia_layout = MultimediaLayout(multimedia_objects, bg_color=(0, 0, 0))
 
-
-    multimedia_objects = []
-    for img in pathlib.Path(RESOURCES_PATH).glob("*.mp4"):
-        png_path = img.resolve()
-        print(png_path)
-        if png_path.exists():
-            multimedia_objects.append(
-                #MultimediaGameObj(png_path,loop=False, audio='ffplay')
-                MultimediaGameObj(png_path,loop=True, audio='ffplay')
-            )
-
-    multimedia_layout = MultimediaLayout(objects=multimedia_objects, bg_color=(0, 0, 0))
-    # -------------------------------------------------------- enter loop
-    main_window.layout_dict = {
-        "hewo": hewo_layout,
-        "media": multimedia_layout,
-    }
+    main_window.layout_dict = {"hewo": hewo_layout,
+                               "media": multimedia_layout}
     main_window.active_layout = "media"
+    main_window.desintegrate_time = 1
     main_window.run()
 
 
