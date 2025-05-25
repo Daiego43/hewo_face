@@ -34,12 +34,12 @@ dependencies = [
 ]
 
 [project.scripts]
-hewo_main = "game.main.main:main"
+hewo_main = "hewo.main.main:main"
 
 [tool.setuptools.packages.find]
-include = ["game", "game.*"]
+include = ["hewo", "hewo.*"]
 
 [tool.setuptools.package-data]
-"game.settings.hewo" = ["*.yaml"]
-"game.settings.window" = ["*.yaml"]
-"game.resources" = ["resources/*"]
+"hewo.settings.hewo" = ["*.yaml"]
+"hewo.settings.window" = ["*.yaml"]
+"hewo.resources" = ["*.png", "*.mp4"]

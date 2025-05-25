@@ -1,23 +1,23 @@
 import pathlib
-from game.main.window import MainWindow
-from game.settings import SettingsLoader
-from game.objects.hewo import HeWo
-from game.objects.multimedia import MultimediaGameObj, MultimediaLayout
+from hewo.main.window import MainWindow
+from hewo.settings import SettingsLoader
+from hewo.objects.hewo import HeWo
+from hewo.objects.multimedia import MultimediaGameObj, MultimediaLayout
 import importlib.resources as res
 
 RESOURCES_PATH = pathlib.Path(__file__).parent.parent / "resources"
 
 
 def main():
-    window_settings = SettingsLoader().load_settings("game.settings.window")
-    hewo_settings = SettingsLoader().load_settings("game.settings.hewo")
+    window_settings = SettingsLoader().load_settings("hewo.settings.window")
+    hewo_settings = SettingsLoader().load_settings("hewo.settings.hewo")
 
     main_window = MainWindow(settings=window_settings)
 
     # build layouts
     hewo_layout = HeWo(settings=hewo_settings)
 
-    resources_root = res.files("game.resources") if res.is_resource else pathlib.Path("game/resources")
+    resources_root = res.files("hewo.resources") if res.is_resource else pathlib.Path("game/resources")
     mp4 = resources_root / "test.mp4"
     img = resources_root / "img.png"
     multimedia_objects: list[MultimediaGameObj] = [

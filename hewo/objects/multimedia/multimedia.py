@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import pygame
 import cv2
-from game.settings import create_logger
+from hewo.settings import create_logger
 
 
 class Multimedia:

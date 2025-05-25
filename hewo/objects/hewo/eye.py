@@ -1,7 +1,7 @@
 import copy
 import pygame
-from game.objects.hewo.eye_components import EyeLash, Pupil
-from game.settings import create_logger
+from hewo.objects.hewo.eye_components import EyeLash, Pupil
+from hewo.settings import create_logger
 
 
 class Eye:

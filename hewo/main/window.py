@@ -5,10 +5,10 @@ import screeninfo
 from typing import Any
 import pathlib
 
-from game.settings import SettingsLoader
-from game.objects.hewo import HeWo
-from game.objects.multimedia import MultimediaLayout, MultimediaGameObj, Multimedia
-from game.main.endpoint import ServerEndPoint
+from hewo.settings import SettingsLoader
+from hewo.objects.hewo import HeWo
+from hewo.objects.multimedia import MultimediaLayout, MultimediaGameObj, Multimedia
+from hewo.main.endpoint import ServerEndPoint
 
 logging.basicConfig(level=logging.DEBUG, format="[%(levelname)s] - %(name)s: %(message)s")
 
