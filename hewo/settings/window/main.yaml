@@ -1,12 +1,12 @@
 width: 960
 height: 640
-deploy: False
+deploy: True
 bg_color:
   - 100
   - 139
   - 127
 monitor_id: 0
 window_title: Hewo-Bot Display
-active_layout: None
+active_layout: hewo
 fps: 60
 vsync: True

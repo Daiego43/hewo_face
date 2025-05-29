@@ -36,7 +36,7 @@ def main():
 
     main_window.layout_dict = {"hewo": hewo_layout,
                                "media": multimedia_layout}
-    main_window.active_layout = "media"
+    main_window.active_layout = window_settings["active_layout"]
     main_window.desintegrate_time = 1
     main_window.run()
 
