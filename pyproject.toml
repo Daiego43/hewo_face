@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hewo"
-version = "0.2.0"
+version = "0.2.1"
 description = "A Pygame project for modular game elements with reusable objects."
 authors = [
   { name = "Diego Delgado Chaves", email = "diedelcha@gmail.com" }
@@ -14,28 +14,28 @@ readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
 
 dependencies = [
-  "blinker==1.9.0",
-  "certifi==2024.12.14",
-  "charset-normalizer==3.4.0",
-  "click==8.1.7",
-  "Flask==3.1.0",
-  "idna==3.10",
-  "itsdangerous==2.2.0",
-  "Jinja2==3.1.4",
-  "MarkupSafe==3.0.2",
-  "numpy==2.1.1",
-  "pygame==2.6.0",
-  "PyYAML==6.0.2",
-  "requests==2.32.3",
-  "scipy==1.14.1",
-  "screeninfo==0.8.1",
-  "urllib3==2.2.3",
-  "Werkzeug==3.1.3",
-  "opencv-python==4.11.0.86"
+  "blinker>=1.9.0",
+  "certifi>=2024.12.14",
+  "charset-normalizer>=3.4.0",
+  "click>=8.1.7",
+  "Flask>=3.1.0",
+  "idna>=3.10",
+  "itsdangerous>=2.2.0",
+  "Jinja2>=3.1.4",
+  "MarkupSafe>=3.0.2",
+  "numpy>=2.1.1",
+  "pygame>=2.6.0",
+  "PyYAML>=6.0.2",
+  "requests>=2.32.3",
+  "scipy>=1.14.1",
+  "screeninfo>=0.8.1",
+  "urllib3>=2.2.3",
+  "Werkzeug>=3.1.3",
+  "opencv-python>=4.11.0.86"
 ]
 
 [project.scripts]
-hewo_main = "hewo.main.main:main"
+hewo_face = "hewo.main.main:main"
 
 [tool.setuptools.packages.find]
 include = ["hewo", "hewo.*"]
