@@ -1,11 +1,12 @@
 #!/bin/bash
 
-BASE_URL="http://majora-asus.local:8000"
+BASE_URL="http://lattepanda.local:8000"
 echo "📺 set_layout → media"
 curl -X POST "$BASE_URL/set_layout" \
   -H "Content-Type: application/json" \
   -d '{"name": "hewo"}'
 echo -e "\n"
+
 echo "🔁 set_emotion_goal"
 curl -X POST "$BASE_URL/face/set_emotion_goal" \
   -H "Content-Type: application/json" \

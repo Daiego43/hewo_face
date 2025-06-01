@@ -1,5 +1,5 @@
 ### MULTIMEDIA TESTS BELOW ###
-BASE_URL="http://majora-asus.local:8000"
+BASE_URL="http://lattepanda.local:8000"
 echo "📺 set_layout → media"
 curl -X POST "$BASE_URL/set_layout" \
   -H "Content-Type: application/json" \
