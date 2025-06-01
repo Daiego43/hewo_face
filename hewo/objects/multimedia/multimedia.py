@@ -16,7 +16,7 @@ class Multimedia:
         self,
         filepath: str,
         loop: bool = True,
-        audio: bool | str = False,  # False | True | "ffplay"
+        audio: bool = False,
         *,
         target_size: tuple[int, int] | None = None,
         object_name: str = "Multimedia",
@@ -27,13 +27,15 @@ class Multimedia:
 
         self.filepath = filepath
         self.loop = loop
-        self.audio_request = audio
-        self.target_size = target_size  # (w, h) or None
+        self.audio_enabled = audio
+        self.target_size = target_size
 
-        self.audio_mode: str | None = None  # "mixer" | "ffplay" | None
+        self.audio_mode: str | None = None
         self.audio_proc: subprocess.Popen | None = None
 
-        # Load media ------------------------------------------------------
+        self.is_playing = False
+        self.finished = False
+
         _, ext = os.path.splitext(filepath)
         ext = ext.lower()
         if ext in self.SUPPORTED_IMAGE_EXTS:
@@ -45,67 +47,38 @@ class Multimedia:
         else:
             raise ValueError(f"Unsupported media extension: {ext}")
 
-        # Common state ----------------------------------------------------
-        self.is_playing = True
-        self.finished = False
-
-    # ------------------------------------------------------------------ audio helpers
     def _setup_audio(self):
-        if not self.audio_request or self.media_type != "video":
+        if not self.audio_enabled or self.media_type != "video":
             return
 
-        if self.audio_request == "ffplay":
-            if shutil.which("ffplay") is None:
-                self.logger.warning("ffplay not found in PATH – audio disabled")
-                return
-            self.audio_mode = "ffplay"
-        else:  # True → try mixer
-            self.audio_mode = "mixer"
-            try:
-                if not pygame.mixer.get_init():
-                    pygame.mixer.init()
-                pygame.mixer.music.load(self.filepath)
-            except pygame.error as e:
-                self.logger.warning(f"pygame.mixer cannot play this file ({e}). Using ffplay instead")
-                if shutil.which("ffplay") is None:
-                    self.logger.warning("ffplay not found – audio disabled")
-                    self.audio_mode = None
-                else:
-                    self.audio_mode = "ffplay"
+        if shutil.which("ffplay") is None:
+            self.logger.warning("ffplay not found in PATH – audio disabled")
+            self.audio_mode = None
+            return
 
-        if self.audio_mode:
+        self.audio_mode = "ffplay"
+
+        if self.is_playing:
             self._start_audio()
 
     def _start_audio(self):
-        if self.audio_mode == "mixer":
-            pygame.mixer.music.play(-1 if self.loop else 0)
-        elif self.audio_mode == "ffplay":
-            args = [
-                "ffplay",
-                "-nodisp",
-                "-autoexit",
-                "-loglevel",
-                "quiet",
-            ]
+        if self.audio_mode == "ffplay":
+            args = ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet"]
             if self.loop:
                 args += ["-loop", "0"]
             args.append(self.filepath)
             self.audio_proc = subprocess.Popen(args)
 
     def _stop_audio(self):
-        if self.audio_mode == "mixer":
-            pygame.mixer.music.stop()
-        elif self.audio_mode == "ffplay" and self.audio_proc is not None:
+        if self.audio_mode == "ffplay" and self.audio_proc is not None:
             self.audio_proc.kill()
             self.audio_proc = None
 
-    # ------------------------------------------------------------------ utility
     def _apply_target_size(self):
         if self.target_size and self.surface.get_size() != self.target_size:
             self.surface = pygame.transform.smoothscale(self.surface, self.target_size)
             self.rect = self.surface.get_rect(topleft=self.rect.topleft)
 
-    # ------------------------------------------------------------------ loaders
     def _load_image(self, path):
         self.surface = pygame.image.load(path).convert_alpha()
         self.rect = self.surface.get_rect()
@@ -137,7 +110,6 @@ class Multimedia:
         self._apply_target_size()
         self.original_surface = self.surface.copy()
 
-    # ------------------------------------------------------------------ main API
     def update(self, dt_ms: float):
         if self.media_type == "image" or not self.is_playing or self.finished:
             return
@@ -166,21 +138,16 @@ class Multimedia:
         if not self.finished:
             target_surface.blit(self.surface, position)
 
-    # ------------------------------------------------------------------ controls
     def play(self):
         if self.finished:
             self.stop()
         self.is_playing = True
-        if self.audio_mode == "mixer":
-            pygame.mixer.music.unpause()
-        elif self.audio_mode == "ffplay" and self.audio_proc is None:
+        if self.audio_mode == "ffplay" and self.audio_proc is None:
             self._start_audio()
 
     def pause(self):
         self.is_playing = False
-        if self.audio_mode == "mixer":
-            pygame.mixer.music.pause()
-        elif self.audio_mode == "ffplay":
+        if self.audio_mode == "ffplay":
             self._stop_audio()
 
     def stop(self):
@@ -196,8 +163,6 @@ class Multimedia:
 
 
 class MultimediaGameObj(Multimedia):
-    """Movable Pygame object wrapping Multimedia; accepts *size* for scaling."""
-
     def __init__(
         self,
         filepath: str,
@@ -206,10 +171,12 @@ class MultimediaGameObj(Multimedia):
         *,
         size: tuple[int, int] | None = None,
         loop: bool = True,
-        audio: bool | str = False,
+        audio: bool = False,
         object_name: str = "MultimediaObj",
+        autoplay: bool = False,
     ):
         self.rect = pygame.Rect(position, (0, 0))
+        self.is_playing = autoplay
         super().__init__(filepath, loop=loop, audio=audio, target_size=size, object_name=object_name)
         self.rect.topleft = position
         self.velocity = pygame.Vector2(velocity)
@@ -227,24 +194,19 @@ class MultimediaGameObj(Multimedia):
 
 
 class MultimediaLayout:
-    """Container for multiple MultimediaGameObj instances."""
+    def __init__(self, settings):
+        self.logger = create_logger(settings['object_name'])
+        self.bg_color = settings['bg_color']
+        self.objects = settings['objects']
 
-    def __init__(self, objects=None, bg_color=(0, 0, 0), object_name="MultimediaLayout"):
-        self.logger = create_logger(object_name)
-        self.bg_color = bg_color
-        self.objects = objects or []  # list[MultimediaGameObj]
-
-    # --------------------------------------------------------- collection helpers
     def add_object(self, obj: MultimediaGameObj):
-        """Append a new media object to the layout at runtime."""
         self.objects.append(obj)
 
     def remove_object(self, obj: MultimediaGameObj):
         if obj in self.objects:
             self.objects.remove(obj)
-            obj.stop()  # ensure audio/video stops when removed
+            obj.stop()
 
-    # --------------------------------------------------------- event / update / draw
     def handle_event(self, event):
         for obj in self.objects:
             obj.handle_event(event)
@@ -257,3 +219,42 @@ class MultimediaLayout:
         surface.fill(self.bg_color)
         for obj in self.objects:
             obj.draw(surface)
+
+    def get_object_by_name(self, name: str) -> MultimediaGameObj | None:
+        for obj in self.objects:
+            if getattr(obj, 'logger', None) and obj.logger.name == name:
+                return obj
+            if getattr(obj, 'object_name', '') == name:
+                return obj
+        return None
+
+    def move_object(self, name: str, dx: int, dy: int):
+        obj = self.get_object_by_name(name)
+        if obj:
+            obj.rect.x += dx
+            obj.rect.y += dy
+            self.logger.info(f"Moved '{name}' by ({dx}, {dy})")
+
+    def set_position(self, name: str, x: int, y: int):
+        obj = self.get_object_by_name(name)
+        if obj:
+            obj.rect.topleft = (x, y)
+            self.logger.info(f"Set position of '{name}' to ({x}, {y})")
+
+    def pause_object(self, name: str):
+        obj = self.get_object_by_name(name)
+        if obj:
+            obj.pause()
+            self.logger.info(f"Paused '{name}'")
+
+    def play_object(self, name: str):
+        obj = self.get_object_by_name(name)
+        if obj:
+            obj.play()
+            self.logger.info(f"Played '{name}'")
+
+    def remove_by_name(self, name: str):
+        obj = self.get_object_by_name(name)
+        if obj:
+            self.remove_object(obj)
+            self.logger.info(f"Removed '{name}'")
