@@ -4,7 +4,7 @@
   <name>hewo_face</name>
   <version>0.0.0</version>
   <description>Face module for HeWo robot in ROS 2</description>
-  <maintainer email="ddelcha@upo.es">Diego Delgado Chaves</maintainer>
+  <maintainer email="diedelcha@gmail.com">Diego Delgado Chaves</maintainer>
   <license>MIT</license>
 
   <test_depend>ament_copyright</test_depend>

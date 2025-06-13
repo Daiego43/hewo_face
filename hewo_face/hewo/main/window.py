@@ -53,6 +53,8 @@ class MainWindow:
 
         # ------------------------------------------------ optional web endpoint
         self.web_server = ServerEndPoint(self)
+
+    def start_web_server(self):
         self.web_server.start()
 
     # ---------------------------------------------------------------- cleanup helpers
