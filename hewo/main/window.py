@@ -3,10 +3,7 @@ import logging
 import pygame
 import screeninfo
 from typing import Any
-import pathlib
 
-from hewo.settings import SettingsLoader
-from hewo.objects.hewo import HeWo
 from hewo.objects.multimedia import MultimediaLayout, MultimediaGameObj, Multimedia
 from hewo.main.endpoint import ServerEndPoint
 
@@ -18,7 +15,6 @@ class MainWindow:
 
     def __init__(self, settings: dict[str, Any], layout_dict: dict[str, Any] | None = None,
                  active_layout: str | None = None):
-        self.desintegrate_time = None
         pygame.init()
         self.logger = logging.getLogger(self.__class__.__name__)
         self.settings = settings
