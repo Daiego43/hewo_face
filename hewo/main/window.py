@@ -52,8 +52,9 @@ class MainWindow:
         self.fps = self.settings["fps"]
 
         # ------------------------------------------------ optional web endpoint
-        self.web_server = ServerEndPoint(self)
-        self.web_server.start()
+        if self.settings['enable_api']:
+            self.web_server = ServerEndPoint(self)
+            self.web_server.start()
 
     # ---------------------------------------------------------------- cleanup helpers
     def _shutdown_media(self):

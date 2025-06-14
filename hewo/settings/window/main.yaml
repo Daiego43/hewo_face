@@ -10,3 +10,4 @@ window_title: Hewo-Bot Display
 active_layout: hewo
 fps: 60
 vsync: True
+enable_api: True
