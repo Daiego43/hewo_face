@@ -1,1 +1,1 @@
-from hewo.objects.hewo.hewo import HeWo
+from hewo_face.hewo.objects.hewo.hewo import HeWo

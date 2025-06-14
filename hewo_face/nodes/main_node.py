@@ -2,6 +2,10 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 from geometry_msgs.msg import Point, Vector3
+
+from std_msgs.msg import Empty, UInt32
+from hewo_face_interfaces.msg import Emotion, AdjustEmotionPoint, AdjustPosition
+
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import pygame
@@ -10,12 +14,11 @@ import pathlib
 import psutil
 import os
 
-from hewo.main.window import MainWindow
-from hewo.settings import SettingsLoader
-from hewo.objects.hewo import HeWo
-from hewo.objects.multimedia import MultimediaLayout
+from hewo_face.hewo.main.window import MainWindow
+from hewo_face.hewo.settings import SettingsLoader
+from hewo_face.hewo.objects.hewo import HeWo
+from hewo_face.hewo.objects.multimedia import MultimediaLayout
 
-RESOURCES_PATH = pathlib.Path(__file__).parent.parent / "resources"
 
 
 class HeWoMainNode(Node):
@@ -28,22 +31,32 @@ class HeWoMainNode(Node):
 
         # Load all settings
         loader = SettingsLoader()
-        self.window_settings = loader.load_settings("hewo.settings.window")
-        self.hewo_settings = loader.load_settings("hewo.settings.hewo")
-
+        self.window_settings = loader.load_settings("hewo_face.hewo.settings.window")
+        self.hewo_settings = loader.load_settings("hewo_face.hewo.settings.hewo")
+        print(self.window_settings)
+        print(self.hewo_settings)
         # Setup layouts and window
         self.window = MainWindow(settings=self.window_settings)
         self.hewo_layout = HeWo(settings=self.hewo_settings)
         self.window.layout_dict = {"hewo": self.hewo_layout}
-        self.window.active_layout = self.window_settings["active_layout"] # 'hewo'
+        self.window.active_layout = self.window_settings["active_layout"]  # 'hewo'
 
         # Setup publishers
         self.emotion_pub = self.create_publisher(String, 'hewo/emotion', 10)
         self.position_pub = self.create_publisher(Point, 'hewo/position', 10)
         self.size_pub = self.create_publisher(Vector3, 'hewo/size', 10)
-        # self.frame_pub = self.create_publisher(Image, 'hewo/frame', 10)
+        self.frame_pub = self.create_publisher(Image, 'hewo/frame', 10)
 
         # self.create_timer(5.0, self.log_performance)
+
+        # Setup subscribers
+        self.create_subscription(Emotion, 'hewo/set_emotion_goal', self.handle_set_emotion_goal, 10)
+        self.create_subscription(AdjustEmotionPoint, 'hewo/adjust_emotion_point', self.handle_adjust_emotion_point, 10)
+        self.create_subscription(AdjustPosition, 'hewo/adjust_position', self.handle_adjust_position, 10)
+        self.create_subscription(UInt32, 'hewo/set_size', self.handle_set_size, 10)
+        self.create_subscription(Empty, 'hewo/trigger_blink', self.handle_trigger_blink, 10)
+        self.create_subscription(Empty, 'hewo/toggle_talk', self.handle_toggle_talk, 10)
+
     # ------------------------Publisher actions------------------------
     def publish_emotion(self):
         try:
@@ -97,10 +110,30 @@ class HeWoMainNode(Node):
         # self.publish_frame_img()
 
     # ------------------------Subscriber actions------------------------
+    def handle_set_emotion_goal(self, msg: Emotion):
+        data = dict(zip(msg.keys, msg.values))
+        self.window.layout_dict['hewo'].set_emotion_goal(data)
+        self.get_logger().info(f"[ROS] Emotion goal set: {data}")
 
+    def handle_adjust_emotion_point(self, msg: AdjustEmotionPoint):
+        self.window.layout_dict['hewo'].adjust_emotion(msg.param, msg.value)
+        self.get_logger().info(f"[ROS] Adjusted emotion: {msg.param} → {msg.value}")
 
+    def handle_adjust_position(self, msg: AdjustPosition):
+        self.window.layout_dict['hewo'].adjust_position(msg.dx, msg.dy)
+        self.get_logger().info(f"[ROS] Adjusted position by ({msg.dx}, {msg.dy})")
 
+    def handle_set_size(self, msg: UInt32):
+        self.window.layout_dict['hewo'].set_face_size(msg.data)
+        self.get_logger().info(f"[ROS] Set face size: {msg.data}")
 
+    def handle_trigger_blink(self, msg: Empty):
+        self.window.layout_dict['hewo'].trigger_blink()
+        self.get_logger().info("[ROS] Triggered blink")
+
+    def handle_toggle_talk(self, msg: Empty):
+        self.window.layout_dict['hewo'].toggle_talk()
+        self.get_logger().info("[ROS] Toggled talk")
 
     # Helper methods for main loop
     def step_frame(self, dt_ms):

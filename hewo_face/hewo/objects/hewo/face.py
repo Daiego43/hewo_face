@@ -1,9 +1,9 @@
 import pygame
 import copy
 import random
-from hewo.objects.hewo.eye import Eye
-from hewo.objects.hewo.mouth import Mouth
-from hewo.settings import SettingsLoader, create_logger
+from hewo_face.hewo.objects.hewo.eye import Eye
+from hewo_face.hewo.objects.hewo.mouth import Mouth
+from hewo_face.hewo.settings import SettingsLoader, create_logger
 
 PHI = (1 + 5 ** 0.5) / 2  # proporción áurea
 

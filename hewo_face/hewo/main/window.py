@@ -4,8 +4,8 @@ import pygame
 import screeninfo
 from typing import Any
 
-from hewo.objects.multimedia import MultimediaLayout, MultimediaGameObj, Multimedia
-from hewo.main.endpoint import ServerEndPoint
+from hewo_face.hewo.objects.multimedia import MultimediaLayout, MultimediaGameObj, Multimedia
+from hewo_face.hewo.main.endpoint import ServerEndPoint
 
 logging.basicConfig(level=logging.DEBUG, format="[%(levelname)s] - %(name)s: %(message)s")
 

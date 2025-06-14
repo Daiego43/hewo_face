@@ -4,7 +4,7 @@ import time
 import pygame
 import numpy as np
 from scipy.interpolate import make_interp_spline
-from hewo.settings import create_logger
+from hewo_face.hewo.settings import create_logger
 
 
 class Lip:

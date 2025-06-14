@@ -1,9 +1,9 @@
 import pygame
 import random
-from hewo.objects.hewo.face import Face
-from hewo.settings import SettingsLoader, create_logger
-from hewo.objects.hewo.logic.emotion_mapper import EmotionMapper
-from hewo.objects.hewo.logic.input_handler import HeWoInputHandler
+from hewo_face.hewo.objects.hewo.face import Face
+from hewo_face.hewo.settings import SettingsLoader, create_logger
+from hewo_face.hewo.objects.hewo.logic.emotion_mapper import EmotionMapper
+from hewo_face.hewo.objects.hewo.logic.input_handler import HeWoInputHandler
 
 
 class HeWo(Face):

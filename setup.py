@@ -4,12 +4,18 @@ package_name = 'hewo_face'
 
 setup(
     name=package_name,
-    version='0.3.2',
-    packages=find_packages(include=["hewo", "hewo.*"]),
+    version='0.0.1',
+    packages=find_packages(include=["hewo_face", "hewo_face.*"]),
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
+    package_data={
+        'hewo_face': [
+            'hewo/settings/**/*.yaml',
+        ],
+    },
+    include_package_data=True,
     install_requires=[
         'setuptools',
         'pygame>=2.6.0',
