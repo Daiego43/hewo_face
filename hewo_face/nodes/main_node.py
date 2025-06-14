@@ -42,7 +42,7 @@ class HeWoMainNode(Node):
         self.window.active_layout = self.window_settings["active_layout"]  # 'hewo'
 
         # Setup publishers
-        self.emotion_pub = self.create_publisher(String, 'hewo/emotion', 10)
+        self.emotion_pub = self.create_publisher(Emotion, 'hewo/emotion', 10)
         self.position_pub = self.create_publisher(Point, 'hewo/position', 10)
         self.size_pub = self.create_publisher(Vector3, 'hewo/size', 10)
         self.frame_pub = self.create_publisher(Image, 'hewo/frame', 10)
@@ -61,9 +61,12 @@ class HeWoMainNode(Node):
     def publish_emotion(self):
         try:
             layout = self.window.get_active_layout()
-            emotion = layout.get_emotion()
-            msg = String()
-            msg.data = str(emotion)
+            emotion_dict = layout.get_emotion()
+
+            msg = Emotion()
+            msg.keys = list(emotion_dict.keys())
+            msg.values = [int(v) for v in emotion_dict.values()]
+
             self.emotion_pub.publish(msg)
         except Exception as e:
             self.get_logger().warn(f"Emotion publish failed: {e}")
