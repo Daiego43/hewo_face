@@ -29,7 +29,7 @@ class ServerEndPoint:
             self.main_window.active_layout = name
             return jsonify({"status": "success", "active_layout": name}), 200
 
-        @self.app.route('/face/set_emotion_goal', methods=['POST'])
+        @self.app.route('/hewo/set_emotion_goal', methods=['POST'])
         def set_emotion():
             layout = self.get_layout()
             if not layout or not hasattr(layout, 'set_emotion_goal'):
@@ -41,7 +41,7 @@ class ServerEndPoint:
             except Exception as e:
                 return jsonify({"status": "error", "message": str(e)}), 400
 
-        @self.app.route('/face/get_emotion', methods=['GET'])
+        @self.app.route('/hewo/get_emotion', methods=['GET'])
         def get_emotion():
             layout = self.get_layout()
             if not layout or not hasattr(layout, 'get_emotion'):
@@ -52,19 +52,19 @@ class ServerEndPoint:
             except Exception as e:
                 return jsonify({"status": "error", "message": str(e)}), 400
 
-        @self.app.route('/face/toggle_talk', methods=['POST'])
+        @self.app.route('/hewo/toggle_talk', methods=['POST'])
         def toggle_talk():
             layout = self.get_layout()
             layout.toggle_talk()
             return jsonify({"status": "success"}), 200
 
-        @self.app.route('/face/trigger_blink', methods=['POST'])
+        @self.app.route('/hewo/trigger_blink', methods=['POST'])
         def trigger_blink():
             layout = self.get_layout()
             layout.trigger_blink()
             return jsonify({"status": "success"}), 200
 
-        @self.app.route('/face/adjust_position', methods=['POST'])
+        @self.app.route('/hewo/adjust_position', methods=['POST'])
         def adjust_position():
             layout = self.get_layout()
             data = request.get_json()
@@ -73,7 +73,7 @@ class ServerEndPoint:
             layout.adjust_position(dx, dy)
             return jsonify({"status": "success"}), 200
 
-        @self.app.route('/face/set_size', methods=['POST'])
+        @self.app.route('/hewo/set_size', methods=['POST'])
         def adjust_size():
             layout = self.get_layout()
             data = request.get_json()
@@ -81,19 +81,19 @@ class ServerEndPoint:
             layout.set_face_size(size)
             return jsonify({"status": "success"}), 200
 
-        @self.app.route('/face/set_random_emotion', methods=['POST'])
+        @self.app.route('/hewo/set_random_emotion', methods=['POST'])
         def set_random_emotion():
             layout = self.get_layout()
             layout.set_random_emotion()
             return jsonify({"status": "success"}), 200
 
-        @self.app.route('/face/reset_emotion', methods=['POST'])
+        @self.app.route('/hewo/reset_emotion', methods=['POST'])
         def reset_emotion():
             layout = self.get_layout()
             layout.reset_emotion()
             return jsonify({"status": "success"}), 200
 
-        @self.app.route('/face/adjust_emotion/<param>', methods=['POST'])
+        @self.app.route('/hewo/adjust_emotion/<param>', methods=['POST'])
         def adjust_emotion(param):
             layout = self.get_layout()
             data = request.get_json()
