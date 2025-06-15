@@ -3,7 +3,6 @@ from hewo.settings import SettingsLoader
 from hewo.objects.hewo import HeWo
 from hewo.objects.multimedia import MultimediaLayout
 
-
 LOADER = SettingsLoader()
 
 def main():

@@ -9,8 +9,8 @@ from hewo.settings import create_logger
 class Multimedia:
     """Image/video handler with optional audio. Provides update & draw hooks."""
 
-    SUPPORTED_IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".gif"}
-    SUPPORTED_VIDEO_EXTS = {".mp4", ".avi", ".mov", ".mkv"}
+    SUPPORTED_IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif"}
+    SUPPORTED_VIDEO_EXTS = {".mp4", ".mov"}
 
     def __init__(
         self,
