@@ -14,10 +14,10 @@ import pathlib
 import psutil
 import os
 
-from hewo_face.hewo.main.window import MainWindow
-from hewo_face.hewo.settings import SettingsLoader
-from hewo_face.hewo.objects.hewo import HeWo
-from hewo_face.hewo.objects.multimedia import MultimediaLayout
+from hewo.main.window import MainWindow
+from hewo.settings import SettingsLoader
+from hewo.objects.hewo import HeWo
+from hewo.objects.multimedia import MultimediaLayout
 
 
 

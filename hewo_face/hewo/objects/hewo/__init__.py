@@ -1,1 +1,0 @@
-from hewo_face.hewo.objects.hewo.hewo import HeWo
